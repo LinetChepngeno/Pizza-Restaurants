@@ -2,8 +2,7 @@ from app import app, db
 from models import Restaurant, Pizza, RestaurantPizza
 
 with app.app_context():
-    db.drop_all()
-    db.create_all()
+    db.create_all()  # Create the database tables
 
     # Seed restaurants
     restaurant1 = Restaurant(name='Dominion Pizza', address='Good Italian, Ngong Road, 5th Avenue')
@@ -11,7 +10,7 @@ with app.app_context():
 
     db.session.add(restaurant1)
     db.session.add(restaurant2)
-    db.session.commit()
+    db.session.commit()  # Commit the restaurant instances
 
     # Seed pizzas
     pizza1 = Pizza(name='Cheese', ingredients='Dough, Tomato Sauce, Cheese')
@@ -19,7 +18,7 @@ with app.app_context():
 
     db.session.add(pizza1)
     db.session.add(pizza2)
-    db.session.commit()
+    db.session.commit()  # Commit the pizza instances
 
     # Seed restaurant_pizzas
     restaurant_pizza1 = RestaurantPizza(price=10, restaurant_id=restaurant1.id, pizza_id=pizza1.id)
@@ -27,4 +26,4 @@ with app.app_context():
     restaurant_pizza3 = RestaurantPizza(price=12, restaurant_id=restaurant2.id, pizza_id=pizza1.id)
 
     db.session.add_all([restaurant_pizza1, restaurant_pizza2, restaurant_pizza3])
-    db.session.commit()
+    db.session.commit()  # Commit the restaurant_pizza instances

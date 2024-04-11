@@ -1,22 +1,25 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, request, make_response, jsonify
 from flask_migrate import Migrate
+
+from models import db, Restaurant, Pizza, RestaurantPizza
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pizza.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+app.json.compact = False
+
 migrate = Migrate(app, db)
 
-# Import models
-from models import Restaurant, Pizza, RestaurantPizza
+db.init_app(app)
+
 
 # Routes
-@app.route('/restaurants', methods=['GET'])
+@app.route('/restaurants')
 def get_restaurants():
     restaurants = Restaurant.query.all()
     result = [{'id': r.id, 'name': r.name, 'address': r.address} for r in restaurants]
-    return jsonify(result)
+    # result= [restaurant.to_dict() for restaurant in restaurants]
+    return jsonify(result), 200
 
 @app.route('/restaurants/<int:id>', methods=['GET'])
 def get_restaurant(id):
@@ -63,4 +66,4 @@ def create_restaurant_pizza():
         return jsonify({'errors': ['Pizza or Restaurant not found']}), 404
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5555, debug=True)
