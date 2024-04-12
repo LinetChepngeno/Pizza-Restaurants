@@ -52,18 +52,26 @@ def get_pizzas():
 @app.route('/restaurant_pizzas', methods=['POST'])
 def create_restaurant_pizza():
     data = request.get_json()
-    pizza = Pizza.query.get(data.get('pizza_id'))
-    restaurant = Restaurant.query.get(data.get('restaurant_id'))
-    if pizza and restaurant:
-        rp = RestaurantPizza(price=data.get('price'), pizza=pizza, restaurant=restaurant)
-        db.session.add(rp)
-        try:
+    # pizza = Pizza.query.get(data.get('pizza_id'))
+    # restaurant = Restaurant.query.get(data.get('restaurant_id'))
+    # if pizza and restaurant:
+    rp = RestaurantPizza(
+            price=data.get('price'),
+            pizza_id=data.get('pizza_id'), 
+            restaurant_id=data.get('restaurant_id'))
+    db.session.add(rp)
+    try:
             db.session.commit()
-            return jsonify({'id': pizza.id, 'name': pizza.name, 'ingredients': pizza.ingredients})
-        except:
+
+    except:
             return jsonify({'errors': ['validation errors']}), 400
-    else:
-        return jsonify({'errors': ['Pizza or Restaurant not found']}), 404
+    
+    return make_response(
+         jsonify({"price":rp.price, "pizza_id":rp.pizza_id, "restaurant_id":rp.restaurant_id}), 
+         201
+    )
+    # else:
+    # return jsonify({'errors': ['Pizza or Restaurant not found']}), 404
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

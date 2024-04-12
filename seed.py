@@ -2,7 +2,10 @@ from app import app, db
 from models import Restaurant, Pizza, RestaurantPizza
 
 with app.app_context():
-    db.create_all()  # Create the database tables
+    # Delete all rows in tables
+    Restaurant.query.delete()
+    Pizza.query.delete()
+    RestaurantPizza.query.delete()
 
     # Seed restaurants
     restaurant1 = Restaurant(name='Dominion Pizza', address='Good Italian, Ngong Road, 5th Avenue')
